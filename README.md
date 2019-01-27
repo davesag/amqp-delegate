@@ -111,7 +111,6 @@ delegator
 
 ## TODO
 
-* unit tests
 * documentation
 * publish to npm
 
