@@ -3,6 +3,9 @@
   "version": "1.0.0",
   "description": "A very simplistic, but performant, remote worker system that uses AMQP to coordinate jobs.",
   "main": "src/index.js",
+  "engines": {
+    "node": ">= 10.15.0"
+  },
   "scripts": {
     "eslint-check": "eslint --print-config .eslintrc.js | eslint-config-prettier-check",
     "lint": "eslint .",
