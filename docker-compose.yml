@@ -1,0 +1,15 @@
+version: "3"
+volumes:
+  rabbit-data:
+    driver: local
+
+services:
+  amqp:
+    image: rabbitmq
+    ports:
+      - 15672:15672
+      - 5672:5672
+    volumes:
+      - rabbit-data:/var/lib/rabbitmq
+    healthcheck:
+      test: "exit 0"

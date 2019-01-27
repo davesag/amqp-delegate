@@ -1,0 +1,82 @@
+{
+  "name": "amqp-delegate",
+  "version": "1.0.0",
+  "description": "A very simplistic, but performant, remote worker system that uses AMQP to coordinate jobs.",
+  "main": "src/index.js",
+  "scripts": {
+    "eslint-check": "eslint --print-config .eslintrc.js | eslint-config-prettier-check",
+    "lint": "eslint .",
+    "prettier": "prettier --single-quote --no-semi --write '**/*.{js,json}'",
+    "start": "node index.js",
+    "backend": "docker-compose up -d amqp",
+    "test": "npm run test:unit",
+    "test:integration": "find ./test/integration -name '*.test.js' | NODE_ENV=test xargs mocha --require ./test/integration/testHelper.js --bail",
+    "test:unit": "find ./test/unit -name '*.test.js' | NODE_ENV=test xargs mocha --require ./test/unit/testHelper.js",
+    "test:unit:cov": "find ./test/unit -name '*.test.js' | NODE_ENV=test xargs nyc mocha --require ./test/unit/testHelper.js"
+  },
+  "keywords": [
+    "amqp"
+  ],
+  "author": "Dave Sag <davesag@gmail.com>",
+  "license": "MIT",
+  "dependencies": {
+    "amqplib": "^0.5.3",
+    "uuid": "^3.3.2"
+  },
+  "devDependencies": {
+    "ajv": "^6.7.0",
+    "chai": "^4.2.0",
+    "chai-as-promised": "^7.1.1",
+    "eslint": "^5.12.1",
+    "eslint-config-prettier": "^4.0.0",
+    "eslint-config-standard": "^12.0.0",
+    "eslint-plugin-import": "^2.15.0",
+    "eslint-plugin-mocha": "^5.2.1",
+    "eslint-plugin-node": "^8.0.1",
+    "eslint-plugin-prettier": "^3.0.1",
+    "eslint-plugin-promise": "^4.0.1",
+    "eslint-plugin-standard": "^4.0.0",
+    "faker": "^4.1.0",
+    "husky": "^1.3.1",
+    "lint-staged": "^8.1.0",
+    "mocha": "^5.2.0",
+    "nyc": "^13.1.0",
+    "prettier": "^1.16.1",
+    "proxyquire": "^2.1.0",
+    "sinon": "^7.2.3",
+    "sinon-chai": "^3.3.0",
+    "supertest": "^3.4.2",
+    "wait-until": "0.0.2"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "**/*.{js,json}": [
+      "prettier --single-quote --no-semi --write",
+      "git add"
+    ]
+  },
+  "nyc": {
+    "check-coverage": true,
+    "per-file": true,
+    "lines": 100,
+    "statements": 100,
+    "functions": 100,
+    "branches": 100,
+    "include": [
+      "src/**/*.js"
+    ],
+    "exclude": [
+      "src/index.js"
+    ],
+    "reporter": [
+      "lcov",
+      "text"
+    ],
+    "all": true,
+    "cache": true
+  }
+}
