@@ -7,6 +7,7 @@ const {
   NOT_CONNECTED
 } = require('./errors')
 const defaults = require('./defaults')
+const attachEvents = require('./attachEvents')
 
 /**
  * Create a Job Delegator with the given options.
@@ -23,7 +24,7 @@ const makeDelegator = (options = {}) => {
     ...options
   }
 
-  const { url } = _options
+  const { exchange, url, onError, onClose } = _options
 
   let connection
   let channel
@@ -32,8 +33,10 @@ const makeDelegator = (options = {}) => {
   const start = async () => {
     if (channel) throw new Error(QUEUE_ALREADY_STARTED)
     connection = await amqp.connect(url)
+    attachEvents(connection, { onError, onClose })
+
     channel = await connection.createChannel()
-    queue = await channel.assertQueue('', { exclusive: true })
+    queue = await channel.assertQueue(exchange, { exclusive: true })
   }
 
   const invoke = (name, ...params) =>
@@ -49,7 +52,6 @@ const makeDelegator = (options = {}) => {
           if (message.properties.correlationId === correlationId) {
             try {
               const result = JSON.parse(message.content.toString())
-              console.log('result', result)
               return resolve(result)
             } catch (err) {
               return reject(err)

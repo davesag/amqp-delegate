@@ -10,7 +10,7 @@ describe('delegate a task', () => {
     task
   })
 
-  const delegator = makeDelegator()
+  const delegator = makeDelegator({ exchange: 'test' })
 
   let result
 
