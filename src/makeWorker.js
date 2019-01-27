@@ -7,6 +7,7 @@ const {
   TASK_MISSING
 } = require('./errors')
 const defaults = require('./defaults')
+const attachEvents = require('./attachEvents')
 
 /**
  * Create a Worker with the given options.
@@ -25,7 +26,7 @@ const makeWorker = options => {
     ...options
   }
 
-  const { name, task, url } = _options
+  const { name, task, url, onError, onClose } = _options
 
   if (!name) throw new Error(NAME_MISSING)
   if (typeof task !== 'function') throw new Error(TASK_MISSING)
@@ -36,10 +37,11 @@ const makeWorker = options => {
   const start = async () => {
     if (channel) throw new Error(QUEUE_ALREADY_STARTED)
     connection = await amqp.connect(url)
+    attachEvents(connection, { onError, onClose })
+
     channel = await connection.createChannel()
     channel.assertQueue(name, { durable: false })
     channel.prefetch(1)
-    console.log('Worker', name, 'is awaiting requests')
 
     channel.consume(
       name,
@@ -48,7 +50,6 @@ const makeWorker = options => {
           let params
           try {
             params = JSON.parse(message.content.toString())
-            console.log('Got params', params)
           } catch (err) {
             channel.ack(message)
             return reject(err)

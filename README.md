@@ -8,9 +8,15 @@ A very simplistic, but performant, remote worker system that uses AMQP to coordi
 const { makeWorker } = require('amqp-delegate')
 
 const worker = makeWorker({
-  url: <the url of the amqp server - defaults to ampq://localhost,
-  name: <the name of the worker>,
-  task: <any pure async function>
+  url: <the url of the amqp server> - defaults to ampq://localhost,
+  name: <the name of the worker> — required,
+  task: <any pure async function> — required
+  onError: err => { // optional
+    console.error('A connection error happened', err) // or do something clever
+  }
+  onClose: () => { // optional
+    console.log('The connection has closed.') // or do something clever
+  }
 })
 
 // start it
@@ -30,7 +36,14 @@ worker.stop().then(() => {
 const { makeDelegator } = require('amqp-delegate')
 
 const delegator = makeWorker({
-  url: <the url of the amqp server - defaults to ampq://localhost,
+  exchange: <the name of the exchange to use> — defaults to '',
+  url: <the url of the amqp server> - defaults to ampq://localhost,
+  onError: err => { // optional
+    console.error('A connection error happened', err) // or do something clever
+  }
+  onClose: () => { // optional
+    console.log('The connection has closed.') // or do something clever
+  }
 })
 
 delegator
@@ -44,9 +57,53 @@ delegator
   })
 ```
 
+## A concrete example
+
+### The worker
+
+```
+const task = (a, b) =>
+  new Promise(resolve => setTimeout(() => resolve(a + b), 10))
+
+const worker = makeWorker({
+  name: 'adder',
+  task
+})
+
+worker
+  .start()
+  .then(() => {
+    process.on('SIGINT', () => {
+      worker
+        .stop()
+        .then(() => {
+          process.exit(0)
+        })
+    })
+  })
+  .catch(err => {
+    console.error('caught', err)
+  })
+```
+
+### The delegator
+
+```
+const delegator = makeDelegator()
+
+delegator
+  .start()
+  .then(() => delegator.invoke('adder', 10, 15))
+  .then(result => {
+    console.log('result', result)
+  })
+  .catch(err => {
+    console.error('caught', err)
+  })
+```
+
 ## TODO
 
-* error handling
 * unit tests
 * documentation
 * publish to npm
