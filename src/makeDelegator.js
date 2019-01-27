@@ -12,8 +12,8 @@ const attachEvents = require('./attachEvents')
 /**
  * Create a Job Delegator with the given options.
  * @param options
- *   - exchange The name of the service exchange (required)
- *   - url The url of the AQMP server to use.  Defaults to 'amqp://localhost'
+ *   - exchange The name of the service exchange (optional. Defaults to '')
+ *   - url The url of the AQMP server to use.  (Optional. Defaults to 'amqp://localhost')
  *   - onError a hander to handle connection errors (optional)
  *   - onClose a handler to handle connection closed events (optional)
  * @return A Delegator
@@ -39,6 +39,7 @@ const makeDelegator = (options = {}) => {
     queue = await channel.assertQueue(exchange, { exclusive: true })
   }
 
+  /* istanbul ignore next */
   const invoke = (name, ...params) =>
     new Promise((resolve, reject) => {
       if (!channel) return reject(QUEUE_NOT_STARTED)
@@ -66,7 +67,6 @@ const makeDelegator = (options = {}) => {
 
   const stop = async () => {
     if (!connection) throw new Error(NOT_CONNECTED)
-    if (!channel) throw new Error(QUEUE_NOT_STARTED)
     await channel.close()
     await connection.close()
     channel = undefined

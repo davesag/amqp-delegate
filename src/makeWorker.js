@@ -3,7 +3,6 @@ const {
   NAME_MISSING,
   NOT_CONNECTED,
   QUEUE_ALREADY_STARTED,
-  QUEUE_NOT_STARTED,
   TASK_MISSING
 } = require('./errors')
 const defaults = require('./defaults')
@@ -45,6 +44,7 @@ const makeWorker = options => {
 
     channel.consume(
       name,
+      /* istanbul ignore next */
       message =>
         new Promise((resolve, reject) => {
           let params
@@ -75,7 +75,6 @@ const makeWorker = options => {
   }
 
   const stop = async () => {
-    if (!channel) throw new Error(QUEUE_NOT_STARTED)
     if (!connection) throw new Error(NOT_CONNECTED)
     await channel.close()
     await connection.close()
