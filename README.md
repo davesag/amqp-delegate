@@ -1,5 +1,7 @@
 # amqp-delegate
 
+[![Greenkeeper badge](https://badges.greenkeeper.io/davesag/amqp-delegate.svg)](https://greenkeeper.io/)
+
 A very simplistic, but performant, remote worker system that uses AMQP to coordinate jobs.
 
 | branch | status | coverage | notes |
