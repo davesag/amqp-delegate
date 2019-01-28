@@ -30,6 +30,9 @@ const makeDelegator = (options = {}) => {
   let channel
   let queue
 
+  /**
+   *  start the delegator, making it ready to invoke workers.
+   */
   const start = async () => {
     if (channel) throw new Error(QUEUE_ALREADY_STARTED)
     connection = await amqp.connect(url)
@@ -39,6 +42,12 @@ const makeDelegator = (options = {}) => {
     queue = await channel.assertQueue(exchange, { exclusive: true })
   }
 
+  /**
+   *  invoke the named worker with the given params.
+   *  @param name - The name of the worker to invoke
+   *  @param params - The params to pass to the worker
+   *  @return a promise that resolves to the result of the worker's task.
+   */
   /* istanbul ignore next */
   const invoke = (name, ...params) =>
     new Promise((resolve, reject) => {
@@ -65,6 +74,10 @@ const makeDelegator = (options = {}) => {
       channel.sendToQueue(name, buffer, { correlationId, replyTo })
     })
 
+  /**
+   *  stops the delegator, disconnecting it from the amqp server
+   *  and closing any channels.
+   */
   const stop = async () => {
     if (!connection) throw new Error(NOT_CONNECTED)
     await channel.close()

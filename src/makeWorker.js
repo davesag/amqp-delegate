@@ -33,6 +33,9 @@ const makeWorker = options => {
   let connection
   let channel
 
+  /**
+   *  starts the worker.
+   */
   const start = async () => {
     if (channel) throw new Error(QUEUE_ALREADY_STARTED)
     connection = await amqp.connect(url)
@@ -74,6 +77,9 @@ const makeWorker = options => {
     )
   }
 
+  /**
+   *  stops the worker.
+   */
   const stop = async () => {
     if (!connection) throw new Error(NOT_CONNECTED)
     await channel.close()
