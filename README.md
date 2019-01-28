@@ -9,6 +9,10 @@ A very simplistic, but performant, remote worker system that uses AMQP to coordi
 | `develop` | [![CircleCI](https://circleci.com/gh/davesag/amqp-delegate/tree/develop.svg?style=svg)](https://circleci.com/gh/davesag/amqp-delegate/tree/develop) | [![codecov](https://codecov.io/gh/davesag/amqp-delegate/branch/develop/graph/badge.svg)](https://codecov.io/gh/davesag/amqp-delegate) | Work in progress |
 | `master` | [![CircleCI](https://circleci.com/gh/davesag/amqp-delegate/tree/master.svg?style=svg)](https://circleci.com/gh/davesag/amqp-delegate/tree/master) | [![codecov](https://codecov.io/gh/davesag/amqp-delegate/branch/master/graph/badge.svg)](https://codecov.io/gh/davesag/amqp-delegate) | Latest stable release |
 
+```
+npm install amqp-delegate
+```
+
 ## Worker
 
 ```
@@ -68,6 +72,8 @@ delegator
 ### The worker
 
 ```
+const { makeWorker } = require('amqp-delegate')
+
 const task = (a, b) =>
   new Promise(resolve => setTimeout(() => resolve(a + b), 10))
 
@@ -95,6 +101,8 @@ worker
 ### The delegator
 
 ```
+const { makeDelegator } = require('amqp-delegate')
+
 const delegator = makeDelegator()
 
 delegator
