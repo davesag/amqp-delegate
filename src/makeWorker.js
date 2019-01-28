@@ -11,10 +11,9 @@ const attachEvents = require('./attachEvents')
 /**
  * Create a Worker with the given options.
  * @param options
- *   - exchange The name of the service exchange (required)
  *   - name The name of the worker. (required)
- *   - task A pure async function that does the work
- *   - url The url of the AQMP server to use.  Defaults to 'amqp://localhost'
+ *   - task A pure async function that does the work (required)
+ *   - url The url of the AQMP server to use.  (optional, defaults to 'amqp://localhost')
  *   - onError a hander to handle connection errors (optional)
  *   - onClose a handler to handle connection closed events (optional)
  * @return A Worker
