@@ -44,8 +44,8 @@ const makeDelegator = (options = {}) => {
 
   /**
    *  invoke the named worker with the given params.
-   *  @param name — the name of the worker to invoke
-   *  @param params — the params to pass to the worker
+   *  @param name - The name of the worker to invoke
+   *  @param params - The params to pass to the worker
    *  @return a promise that resolves to the result of the worker's task.
    */
   /* istanbul ignore next */

@@ -16,8 +16,8 @@ const { makeWorker } = require('amqp-delegate')
 
 const worker = makeWorker({
   url: <the url of the amqp server> - defaults to ampq://localhost,
-  name: <the name of the worker> — required,
-  task: <any pure async function> — required
+  name: <the name of the worker> — required,
+  task: <any pure async function> — required
   onError: err => { // optional
     console.error('A connection error happened', err) // or do something clever
   }
@@ -43,7 +43,7 @@ worker.stop().then(() => {
 const { makeDelegator } = require('amqp-delegate')
 
 const delegator = makeWorker({
-  exchange: <the name of the exchange to use> — defaults to '',
+  exchange: <the name of the exchange to use> — defaults to '',
   url: <the url of the amqp server> - defaults to ampq://localhost,
   onError: err => { // optional
     console.error('A connection error happened', err) // or do something clever
