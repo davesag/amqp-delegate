@@ -42,7 +42,7 @@ const makeWorker = options => {
     attachEvents(connection, { onError, onClose })
 
     channel = await connection.createChannel()
-    channel.assertQueue(name, { durable: false })
+    await channel.assertQueue(name, { durable: false })
     channel.prefetch(1)
 
     channel.consume(
