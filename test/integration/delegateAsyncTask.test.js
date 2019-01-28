@@ -11,7 +11,7 @@ describe('delegate an asynchronous task', () => {
     task
   })
 
-  const delegator = makeDelegator({ exchange: 'test' })
+  const delegator = makeDelegator()
 
   let result
 

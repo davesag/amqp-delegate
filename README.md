@@ -43,7 +43,6 @@ worker.stop().then(() => {
 const { makeDelegator } = require('amqp-delegate')
 
 const delegator = makeWorker({
-  exchange: <the name of the exchange to use> — defaults to '',
   url: <the url of the amqp server> - defaults to ampq://localhost,
   onError: err => { // optional
     console.error('A connection error happened', err) // or do something clever
@@ -108,11 +107,6 @@ delegator
     console.error('caught', err)
   })
 ```
-
-## TODO
-
-* documentation
-* publish to npm
 
 ## Development
 

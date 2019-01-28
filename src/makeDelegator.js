@@ -24,7 +24,7 @@ const makeDelegator = (options = {}) => {
     ...options
   }
 
-  const { exchange, url, onError, onClose } = _options
+  const { url, onError, onClose } = _options
 
   let connection
   let channel
@@ -39,7 +39,7 @@ const makeDelegator = (options = {}) => {
     attachEvents(connection, { onError, onClose })
 
     channel = await connection.createChannel()
-    queue = await channel.assertQueue(exchange, { exclusive: true })
+    queue = await channel.assertQueue('', { exclusive: true })
   }
 
   /**
