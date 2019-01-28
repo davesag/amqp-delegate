@@ -1,6 +1,5 @@
 const defaults = {
-  url: process.env.AMQP_URL || 'amqp://localhost',
-  exchange: ''
+  url: process.env.AMQP_URL || 'amqp://localhost'
 }
 
 module.export = defaults
