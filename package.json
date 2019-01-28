@@ -1,6 +1,6 @@
 {
   "name": "amqp-delegate",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "A very simplistic, but performant, remote worker system that uses AMQP to coordinate jobs.",
   "main": "src/index.js",
   "engines": {
