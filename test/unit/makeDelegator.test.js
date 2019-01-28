@@ -49,7 +49,6 @@ describe('makeDelegator', () => {
       delegator = makeDelegator({ exchange })
       channel = fakeChannel()
       connection = fakeConnection()
-      channel.assertQueue.resolves(queue)
       connection.createChannel.resolves(channel)
       amqplib.connect.resolves(connection)
       await delegator.start()
@@ -61,10 +60,6 @@ describe('makeDelegator', () => {
 
     it('created a channel', () => {
       expect(connection.createChannel).to.have.been.calledOnce
-    })
-
-    it('asserted the queue', () => {
-      expect(channel.assertQueue).to.have.been.calledOnce
     })
 
     it('throws QUEUE_ALREADY_STARTED if you try and start it again', () =>
@@ -83,11 +78,9 @@ describe('makeDelegator', () => {
 
     context('after the delegator was started', () => {
       before(async () => {
-        queue = fakeQueue()
         delegator = makeDelegator({ exchange })
         channel = fakeChannel()
         connection = fakeConnection()
-        channel.assertQueue.resolves(queue)
         channel.close.resolves()
         connection.createChannel.resolves(channel)
         amqplib.connect.resolves(connection)
