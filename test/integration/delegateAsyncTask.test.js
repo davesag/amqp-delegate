@@ -2,8 +2,9 @@ const { expect } = require('chai')
 const makeWorker = require('../../src/makeWorker')
 const makeDelegator = require('../../src/makeDelegator')
 
-describe('delegate a task', () => {
-  const task = async (a, b) => a + b
+describe('delegate an asynchronous task', () => {
+  const task = (a, b) =>
+    new Promise(resolve => setTimeout(() => resolve(a + b), 10))
 
   const worker = makeWorker({
     name: 'adder',

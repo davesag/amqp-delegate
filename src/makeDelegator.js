@@ -7,12 +7,13 @@ const {
   NOT_CONNECTED
 } = require('./errors')
 const defaults = require('./defaults')
+const attachEvents = require('./attachEvents')
 
 /**
  * Create a Job Delegator with the given options.
  * @param options
- *   - exchange The name of the service exchange (required)
- *   - url The url of the AQMP server to use.  Defaults to 'amqp://localhost'
+ *   - exchange The name of the service exchange (optional. Defaults to '')
+ *   - url The url of the AQMP server to use.  (Optional. Defaults to 'amqp://localhost')
  *   - onError a hander to handle connection errors (optional)
  *   - onClose a handler to handle connection closed events (optional)
  * @return A Delegator
@@ -23,19 +24,31 @@ const makeDelegator = (options = {}) => {
     ...options
   }
 
-  const { url } = _options
+  const { exchange, url, onError, onClose } = _options
 
   let connection
   let channel
   let queue
 
+  /**
+   *  start the delegator, making it ready to invoke workers.
+   */
   const start = async () => {
     if (channel) throw new Error(QUEUE_ALREADY_STARTED)
     connection = await amqp.connect(url)
+    attachEvents(connection, { onError, onClose })
+
     channel = await connection.createChannel()
-    queue = await channel.assertQueue('', { exclusive: true })
+    queue = await channel.assertQueue(exchange, { exclusive: true })
   }
 
+  /**
+   *  invoke the named worker with the given params.
+   *  @param name - The name of the worker to invoke
+   *  @param params - The params to pass to the worker
+   *  @return a promise that resolves to the result of the worker's task.
+   */
+  /* istanbul ignore next */
   const invoke = (name, ...params) =>
     new Promise((resolve, reject) => {
       if (!channel) return reject(QUEUE_NOT_STARTED)
@@ -49,7 +62,6 @@ const makeDelegator = (options = {}) => {
           if (message.properties.correlationId === correlationId) {
             try {
               const result = JSON.parse(message.content.toString())
-              console.log('result', result)
               return resolve(result)
             } catch (err) {
               return reject(err)
@@ -62,9 +74,12 @@ const makeDelegator = (options = {}) => {
       channel.sendToQueue(name, buffer, { correlationId, replyTo })
     })
 
+  /**
+   *  stops the delegator, disconnecting it from the amqp server
+   *  and closing any channels.
+   */
   const stop = async () => {
     if (!connection) throw new Error(NOT_CONNECTED)
-    if (!channel) throw new Error(QUEUE_NOT_STARTED)
     await channel.close()
     await connection.close()
     channel = undefined

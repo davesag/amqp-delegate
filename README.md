@@ -2,15 +2,28 @@
 
 A very simplistic, but performant, remote worker system that uses AMQP to coordinate jobs.
 
+[![Greenkeeper badge](https://badges.greenkeeper.io/davesag/amqp-delegate.svg)](https://greenkeeper.io/)
+
+| branch | status | coverage | notes |
+| ------ | ------ | -------- | ----- |
+| `develop` | [![CircleCI](https://circleci.com/gh/davesag/amqp-delegate/tree/develop.svg?style=svg)](https://circleci.com/gh/davesag/amqp-delegate/tree/develop) | [![codecov](https://codecov.io/gh/davesag/amqp-delegate/branch/develop/graph/badge.svg)](https://codecov.io/gh/davesag/amqp-delegate) | Work in progress |
+| `master` | [![CircleCI](https://circleci.com/gh/davesag/amqp-delegate/tree/master.svg?style=svg)](https://circleci.com/gh/davesag/amqp-delegate/tree/master) | [![codecov](https://codecov.io/gh/davesag/amqp-delegate/branch/master/graph/badge.svg)](https://codecov.io/gh/davesag/amqp-delegate) | Latest stable release |
+
 ## Worker
 
 ```
 const { makeWorker } = require('amqp-delegate')
 
 const worker = makeWorker({
-  url: <the url of the amqp server - defaults to ampq://localhost,
-  name: <the name of the worker>,
-  task: <any pure async function>
+  url: <the url of the amqp server> - defaults to ampq://localhost,
+  name: <the name of the worker> — required,
+  task: <any pure async function> — required
+  onError: err => { // optional
+    console.error('A connection error happened', err) // or do something clever
+  }
+  onClose: () => { // optional
+    console.log('The connection has closed.') // or do something clever
+  }
 })
 
 // start it
@@ -30,7 +43,14 @@ worker.stop().then(() => {
 const { makeDelegator } = require('amqp-delegate')
 
 const delegator = makeWorker({
-  url: <the url of the amqp server - defaults to ampq://localhost,
+  exchange: <the name of the exchange to use> — defaults to '',
+  url: <the url of the amqp server> - defaults to ampq://localhost,
+  onError: err => { // optional
+    console.error('A connection error happened', err) // or do something clever
+  }
+  onClose: () => { // optional
+    console.log('The connection has closed.') // or do something clever
+  }
 })
 
 delegator
@@ -44,10 +64,53 @@ delegator
   })
 ```
 
+## A concrete example
+
+### The worker
+
+```
+const task = (a, b) =>
+  new Promise(resolve => setTimeout(() => resolve(a + b), 10))
+
+const worker = makeWorker({
+  name: 'adder',
+  task
+})
+
+worker
+  .start()
+  .then(() => {
+    process.on('SIGINT', () => {
+      worker
+        .stop()
+        .then(() => {
+          process.exit(0)
+        })
+    })
+  })
+  .catch(err => {
+    console.error('caught', err)
+  })
+```
+
+### The delegator
+
+```
+const delegator = makeDelegator()
+
+delegator
+  .start()
+  .then(() => delegator.invoke('adder', 10, 15))
+  .then(result => {
+    console.log('result', result)
+  })
+  .catch(err => {
+    console.error('caught', err)
+  })
+```
+
 ## TODO
 
-* error handling
-* unit tests
 * documentation
 * publish to npm
 
@@ -60,22 +123,31 @@ delegator
 
 ### Initialisation
 
-    npm install
+```
+npm install
+```
 
 ### To Start the queue server for integration testing.
 
-    docker-compose up -d
+```
+docker-compose up -d
+```
 
 Runs Rabbit MQ.
 
 ### Test it
 
-* `npm test` — runs the unit tests (quick and does not need rabbit mq running)
-* `npm run test:integration` — runs the integration tests (not so quick and needs rabbitmq running)
+* `npm test` — runs the unit tests (does not need rabbitmq)
+* `npm run test:unit:cov` — runs the unit tests with code coverage (does not need rabbitmq)
+* `npm run test:integration` — runs the integration tests (needs rabbitmq)
+
+**note** Node 11.7+ breaks `nyc` and `mocha` — see https://github.com/nodejs/node/issues/25650
 
 ### Lint it
 
-    npm run lint
+```
+npm run lint
+```
 
 ## Contributing
 

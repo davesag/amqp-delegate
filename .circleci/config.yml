@@ -7,7 +7,7 @@ version: 2
 jobs:
   build:
     docker:
-      - image: circleci/node:latest
+      - image: circleci/node:lts
         environment:
         - NODE_ENV: test
 
@@ -44,8 +44,8 @@ jobs:
           command: npm run lint
 
       - run:
-          name: Unit Tests without Code Coverage
-          command: npm run test:unit
+          name: Unit Tests with Code Coverage
+          command: npm run test:unit:cov
 
       - run:
           name: Integration Tests
