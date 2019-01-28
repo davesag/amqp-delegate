@@ -1,5 +1,4 @@
 const { expect } = require('chai')
-const delay = require('delay')
 
 const makeWorker = require('../../src/makeWorker')
 const makeDelegator = require('../../src/makeDelegator')
@@ -25,8 +24,6 @@ describe('delegate many tasks to multiple workers', () => {
 
   before(async () => {
     await Promise.all([worker1.start(), worker2.start(), delegator.start()])
-
-    await delay(500) // wait half a second for the services to all start.
 
     results = await Promise.all([
       delegator.invoke('adder', 10, 15),

@@ -4,7 +4,8 @@ const v4 = require('uuid/v4')
 const {
   QUEUE_NOT_STARTED,
   QUEUE_ALREADY_STARTED,
-  NOT_CONNECTED
+  NOT_CONNECTED,
+  WRONG_CORRELATION_ID
 } = require('./errors')
 const defaults = require('./defaults')
 const attachEvents = require('./attachEvents')
@@ -28,7 +29,6 @@ const makeDelegator = (options = {}) => {
 
   let connection
   let channel
-  let queue
 
   /**
    *  start the delegator, making it ready to invoke workers.
@@ -39,7 +39,6 @@ const makeDelegator = (options = {}) => {
     attachEvents(connection, { onError, onClose })
 
     channel = await connection.createChannel()
-    queue = await channel.assertQueue('', { exclusive: true })
   }
 
   /**
@@ -49,13 +48,14 @@ const makeDelegator = (options = {}) => {
    *  @return a promise that resolves to the result of the worker's task.
    */
   /* istanbul ignore next */
-  const invoke = (name, ...params) =>
-    new Promise((resolve, reject) => {
-      if (!channel) return reject(QUEUE_NOT_STARTED)
-      const buffer = Buffer.from(JSON.stringify(params))
-      const correlationId = v4()
-      const replyTo = queue.queue
+  const invoke = async (name, ...params) => {
+    if (!channel) throw new Error(QUEUE_NOT_STARTED)
+    const queue = await channel.assertQueue('', { exclusive: true })
+    const buffer = Buffer.from(JSON.stringify(params))
+    const correlationId = v4()
+    const replyTo = queue.queue
 
+    return new Promise((resolve, reject) => {
       channel.consume(
         replyTo,
         message => {
@@ -66,13 +66,14 @@ const makeDelegator = (options = {}) => {
             } catch (err) {
               return reject(err)
             }
-          }
+          } else return reject(WRONG_CORRELATION_ID)
         },
         { noAck: true }
       )
 
       channel.sendToQueue(name, buffer, { correlationId, replyTo })
     })
+  }
 
   /**
    *  stops the delegator, disconnecting it from the amqp server
@@ -84,7 +85,6 @@ const makeDelegator = (options = {}) => {
     await connection.close()
     channel = undefined
     connection = undefined
-    queue = undefined
   }
 
   return { start, invoke, stop }
