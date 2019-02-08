@@ -9,6 +9,14 @@ A very simplistic, but performant, remote worker system that uses AMQP to coordi
 | `develop` | [![CircleCI](https://circleci.com/gh/davesag/amqp-delegate/tree/develop.svg?style=svg)](https://circleci.com/gh/davesag/amqp-delegate/tree/develop) | [![codecov](https://codecov.io/gh/davesag/amqp-delegate/branch/develop/graph/badge.svg)](https://codecov.io/gh/davesag/amqp-delegate) | Work in progress |
 | `master` | [![CircleCI](https://circleci.com/gh/davesag/amqp-delegate/tree/master.svg?style=svg)](https://circleci.com/gh/davesag/amqp-delegate/tree/master) | [![codecov](https://codecov.io/gh/davesag/amqp-delegate/branch/master/graph/badge.svg)](https://codecov.io/gh/davesag/amqp-delegate) | Latest stable release |
 
+[![NPM](https://nodei.co/npm/amqp-delegate.png)](https://nodei.co/npm/amqp-delegate/)
+
+## See Also
+
+* [`amqp-simple-pub-sub`](https://github.com/davesag/amqp-simple-pub-sub) — A library that simplifies use of aqmp based publishers and subscribers.
+
+## Usage
+
 ```
 npm install amqp-delegate
 ```
@@ -142,8 +150,6 @@ Runs Rabbit MQ.
 * `npm test` — runs the unit tests (does not need rabbitmq)
 * `npm run test:unit:cov` — runs the unit tests with code coverage (does not need rabbitmq)
 * `npm run test:integration` — runs the integration tests (needs rabbitmq)
-
-**note** Node 11.7+ breaks `nyc` and `mocha` — see https://github.com/nodejs/node/issues/25650
 
 ### Lint it
 
