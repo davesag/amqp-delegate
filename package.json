@@ -1,6 +1,6 @@
 {
   "name": "amqp-delegate",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "A very simplistic, but performant, remote worker system that uses AMQP to coordinate jobs.",
   "main": "src/index.js",
   "engines": {
@@ -23,7 +23,10 @@
     "test:unit:cov": "find ./test/unit -name '*.test.js' | NODE_ENV=test xargs nyc mocha --require ./test/unit/testHelper.js"
   },
   "keywords": [
-    "amqp"
+    "amqp",
+    "delegate",
+    "remote-worker",
+    "remote-jobs"
   ],
   "author": "Dave Sag <davesag@gmail.com>",
   "license": "MIT",
