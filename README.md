@@ -18,13 +18,13 @@ A very simple, performant, remote worker system that uses `AMQP` to coordinate j
 
 ## Usage
 
-```
+```sh
 npm install amqp-delegate
 ```
 
 ## Worker
 
-```
+```js
 const { makeWorker } = require('amqp-delegate')
 
 const worker = makeWorker({
@@ -52,7 +52,7 @@ worker.stop().then(() => {
 
 ## Delegator
 
-```
+```js
 const { makeDelegator } = require('amqp-delegate')
 
 const delegator = makeWorker({
@@ -80,7 +80,7 @@ delegator
 
 ### The worker
 
-```
+```js
 const { makeWorker } = require('amqp-delegate')
 
 const task = (a, b) =>
@@ -95,11 +95,9 @@ worker
   .start()
   .then(() => {
     process.on('SIGINT', () => {
-      worker
-        .stop()
-        .then(() => {
-          process.exit(0)
-        })
+      worker.stop().then(() => {
+        process.exit(0)
+      })
     })
   })
   .catch(err => {
@@ -109,7 +107,7 @@ worker
 
 ### The delegator
 
-```
+```js
 const { makeDelegator } = require('amqp-delegate')
 
 const delegator = makeDelegator()
@@ -134,13 +132,13 @@ delegator
 
 ### Initialisation
 
-```
+```sh
 npm install
 ```
 
 ### To Start the queue server for integration testing.
 
-```
+```sh
 docker-compose up -d
 ```
 
@@ -148,13 +146,14 @@ Runs Rabbit MQ.
 
 ### Test it
 
-- `npm test` — runs the unit tests (does not need rabbitmq)
-- `npm run test:unit:cov` — runs the unit tests with code coverage (does not need rabbitmq)
-- `npm run test:integration` — runs the integration tests (needs rabbitmq)
+- `npm test` — runs the unit tests (does not need `rabbitmq`)
+- `npm run test:unit:cov` — runs the unit tests with code coverage (does not need `rabbitmq`)
+- `npm run test:integration` — runs the integration tests (needs `rabbitmq`)
+- `npm run test:mutants` — runs the mutation tests (does not need `rabbitmq`)
 
 ### Lint it
 
-```
+```sh
 npm run lint
 ```
 
