@@ -1,8 +1,9 @@
 const { expect } = require('chai')
-const { stub } = require('sinon')
-
+const { stub, match } = require('sinon')
 const proxyquire = require('proxyquire')
+
 const { fakeChannel, fakeConnection, mockAmqplib } = require('./fakes')
+
 const {
   NAME_MISSING,
   NOT_CONNECTED,
@@ -14,8 +15,17 @@ describe('makeWorker', () => {
   const amqplib = mockAmqplib()
   const name = 'worker'
   const task = stub()
+  const attachEvents = stub()
 
-  const makeWorker = proxyquire('../../src/makeWorker', { amqplib })
+  const makeWorker = proxyquire('../../src/makeWorker', {
+    amqplib,
+    './attachEvents': attachEvents
+  })
+
+  const url = 'amqp://localhost'
+  const onError = () => {}
+  const onClose = () => {}
+
   let worker
   let channel
   let connection
@@ -49,7 +59,7 @@ describe('makeWorker', () => {
 
   describe('start', () => {
     before(async () => {
-      worker = makeWorker({ name, task })
+      worker = makeWorker({ name, task, url, onError, onClose })
       channel = fakeChannel()
       connection = fakeConnection()
       channel.assertQueue.resolves()
@@ -59,7 +69,17 @@ describe('makeWorker', () => {
     })
 
     it('connected', () => {
-      expect(amqplib.connect).to.have.been.calledOnce
+      expect(amqplib.connect).to.have.been.calledWith(url)
+    })
+
+    it('attached events', () => {
+      expect(attachEvents).to.have.been.calledWith(
+        connection,
+        match({
+          onError,
+          onClose
+        })
+      )
     })
 
     it('created a channel', () => {

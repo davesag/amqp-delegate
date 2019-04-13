@@ -1,13 +1,14 @@
 const { expect } = require('chai')
-const { match } = require('sinon')
-
+const { stub, match } = require('sinon')
 const proxyquire = require('proxyquire')
+
 const {
   fakeQueue,
   fakeChannel,
   fakeConnection,
   mockAmqplib
 } = require('./fakes')
+
 const {
   QUEUE_NOT_STARTED,
   QUEUE_ALREADY_STARTED,
@@ -18,11 +19,18 @@ describe('makeDelegator', () => {
   const amqplib = mockAmqplib()
   const v4 = () => '12345'
   const exchange = 'test'
+  const attachEvents = stub()
 
   const makeDelegator = proxyquire('../../src/makeDelegator', {
     amqplib,
-    'uuid/v4': v4
+    'uuid/v4': v4,
+    './attachEvents': attachEvents
   })
+
+  const url = 'amqp://localhost'
+  const onError = () => {}
+  const onClose = () => {}
+
   let delegator
   let channel
   let connection
@@ -46,7 +54,7 @@ describe('makeDelegator', () => {
   describe('start', () => {
     before(async () => {
       queue = fakeQueue()
-      delegator = makeDelegator({ exchange })
+      delegator = makeDelegator({ url, exchange, onClose, onError })
       channel = fakeChannel()
       connection = fakeConnection()
       connection.createChannel.resolves(channel)
@@ -55,7 +63,17 @@ describe('makeDelegator', () => {
     })
 
     it('connected', () => {
-      expect(amqplib.connect).to.have.been.calledOnce
+      expect(amqplib.connect).to.have.been.calledWith(url)
+    })
+
+    it('attached events', () => {
+      expect(attachEvents).to.have.been.calledWith(
+        connection,
+        match({
+          onError,
+          onClose
+        })
+      )
     })
 
     it('created a channel', () => {
