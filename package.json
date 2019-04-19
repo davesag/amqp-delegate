@@ -4,7 +4,7 @@
   "description": "A very simplistic, but performant, remote worker system that uses AMQP to coordinate jobs.",
   "main": "src/index.js",
   "engines": {
-    "node": ">= 10.15.3"
+    "node": ">= 8.10.0"
   },
   "files": [
     "/package*.json",
