@@ -1,5 +1,5 @@
 const { expect } = require('chai')
-const { stub, match } = require('sinon')
+const { stub, match, resetHistory } = require('sinon')
 const proxyquire = require('proxyquire')
 
 const {
@@ -17,14 +17,17 @@ const {
 
 describe('makeDelegator', () => {
   const amqplib = mockAmqplib()
-  const v4 = () => '12345'
+  const correlationId = '12345'
+  const v4 = () => correlationId
   const exchange = 'test'
   const attachEvents = stub()
+  const invoker = stub()
 
   const makeDelegator = proxyquire('../../src/makeDelegator', {
     amqplib,
     'uuid/v4': v4,
-    './attachEvents': attachEvents
+    './attachEvents': attachEvents,
+    './utils/invoker': invoker
   })
 
   const url = 'amqp://localhost'
@@ -45,6 +48,8 @@ describe('makeDelegator', () => {
     }
     delegator = makeDelegator()
 
+    after(resetHistory)
+
     it('created a delegator', () => {
       expect(delegator).to.exist
     })
@@ -61,6 +66,8 @@ describe('makeDelegator', () => {
       amqplib.connect.resolves(connection)
       await delegator.start()
     })
+
+    after(resetHistory)
 
     it('connected', () => {
       expect(amqplib.connect).to.have.been.calledWith(url)
@@ -90,6 +97,8 @@ describe('makeDelegator', () => {
         delegator = makeDelegator({ exchange })
       })
 
+      after(resetHistory)
+
       it('throws NOT_CONNECTED', () =>
         expect(delegator.stop()).to.be.rejectedWith(NOT_CONNECTED))
     })
@@ -106,6 +115,8 @@ describe('makeDelegator', () => {
         await delegator.stop()
       })
 
+      after(resetHistory)
+
       it('closed the channel', () => {
         expect(channel.close).to.have.been.calledOnce
       })
@@ -117,17 +128,20 @@ describe('makeDelegator', () => {
   })
 
   describe('invoke', () => {
+    const invocation = stub()
+
     context('before the delegator was started', () => {
       before(() => {
         delegator = makeDelegator({ exchange })
       })
 
+      after(resetHistory)
+
       it('throws QUEUE_NOT_STARTED', () =>
         expect(delegator.invoke()).to.be.rejectedWith(QUEUE_NOT_STARTED))
     })
 
-    // TODO: work out how to test the channel.consume callback
-    context.skip('after the delegator was started', () => {
+    context('after the delegator was started', () => {
       const name = 'some name'
       const param = 'some param'
 
@@ -140,15 +154,29 @@ describe('makeDelegator', () => {
         connection.createChannel.resolves(channel)
         amqplib.connect.resolves(connection)
         await delegator.start()
+        invocation.resolves()
+        invoker.returns(invocation)
         await delegator.invoke(name, param)
       })
 
-      it('called channel.consume', () => {
-        expect(channel.consume).to.have.been.calledWith(
-          queue.queue,
-          match.func,
-          match({ noAck: true })
+      after(resetHistory)
+
+      it('called channel.assertQueue with the correct params', () => {
+        expect(channel.assertQueue).to.have.been.calledWith('', {
+          exclusive: true
+        })
+      })
+
+      it('called the invoker with the correct params', () => {
+        expect(invoker).to.have.been.calledWith(
+          correlationId,
+          channel,
+          queue.queue
         )
+      })
+
+      it('called invocation with the correct params', () => {
+        expect(invocation).to.have.been.calledWith(name, [param])
       })
     })
   })
