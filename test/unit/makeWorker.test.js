@@ -1,5 +1,5 @@
 const { expect } = require('chai')
-const { stub, match } = require('sinon')
+const { stub, match, resetHistory } = require('sinon')
 const proxyquire = require('proxyquire')
 
 const { fakeChannel, fakeConnection, mockAmqplib } = require('./fakes')
@@ -16,10 +16,12 @@ describe('makeWorker', () => {
   const name = 'worker'
   const task = stub()
   const attachEvents = stub()
+  const taskRunner = stub()
 
   const makeWorker = proxyquire('../../src/makeWorker', {
     amqplib,
-    './attachEvents': attachEvents
+    './attachEvents': attachEvents,
+    './utils/taskRunner': taskRunner
   })
 
   const url = 'amqp://localhost'
@@ -31,6 +33,8 @@ describe('makeWorker', () => {
   let connection
 
   context('create a worker', () => {
+    after(resetHistory)
+
     context('with missing name', () => {
       it('throws NAME_MISSING', () =>
         expect(() => makeWorker({ task })).to.throw(NAME_MISSING))
@@ -58,6 +62,8 @@ describe('makeWorker', () => {
   })
 
   describe('start', () => {
+    const runner = stub()
+
     before(async () => {
       worker = makeWorker({ name, task, url, onError, onClose })
       channel = fakeChannel()
@@ -65,8 +71,11 @@ describe('makeWorker', () => {
       channel.assertQueue.resolves()
       connection.createChannel.resolves(channel)
       amqplib.connect.resolves(connection)
+      taskRunner.returns(runner)
       await worker.start()
     })
+
+    after(resetHistory)
 
     it('connected', () => {
       expect(amqplib.connect).to.have.been.calledWith(url)
@@ -87,11 +96,25 @@ describe('makeWorker', () => {
     })
 
     it('asserted the queue', () => {
-      expect(channel.assertQueue).to.have.been.calledOnce
+      expect(channel.assertQueue).to.have.been.calledOnceWith(name, {
+        durable: false
+      })
     })
 
     it('throws QUEUE_ALREADY_STARTED if you try and start it again', () =>
       expect(worker.start()).to.be.rejectedWith(QUEUE_ALREADY_STARTED))
+
+    it('called channel.prefetch with value 1', () => {
+      expect(channel.prefetch).to.have.been.calledWith(1)
+    })
+
+    it('invoked the taskRunner', () => {
+      expect(taskRunner).to.have.been.calledWith(channel, task)
+    })
+
+    it('called channel.consume with the correct values', () => {
+      expect(channel.consume).to.have.been.calledWith(name, runner)
+    })
   })
 
   describe('stop', () => {
@@ -99,6 +122,7 @@ describe('makeWorker', () => {
       before(() => {
         worker = makeWorker({ name, task })
       })
+      after(resetHistory)
 
       it('throws NOT_CONNECTED', () =>
         expect(worker.stop()).to.be.rejectedWith(NOT_CONNECTED))
@@ -116,6 +140,7 @@ describe('makeWorker', () => {
         await worker.start()
         await worker.stop()
       })
+      after(resetHistory)
 
       it('closed the channel', () => {
         expect(channel.close).to.have.been.calledOnce

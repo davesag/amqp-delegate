@@ -7,6 +7,7 @@ const {
 } = require('./errors')
 const defaults = require('./defaults')
 const attachEvents = require('./attachEvents')
+const taskRunner = require('./utils/taskRunner')
 
 /**
  * Create a Worker with the given options.
@@ -44,36 +45,7 @@ const makeWorker = options => {
     await channel.assertQueue(name, { durable: false })
     channel.prefetch(1)
 
-    channel.consume(
-      name,
-      /* istanbul ignore next */
-      message =>
-        new Promise((resolve, reject) => {
-          let params
-          try {
-            params = JSON.parse(message.content.toString())
-          } catch (err) {
-            channel.ack(message)
-            return reject(err)
-          }
-
-          task(...params)
-            .then(result => {
-              channel.sendToQueue(
-                message.properties.replyTo,
-                Buffer.from(JSON.stringify(result)),
-                { correlationId: message.properties.correlationId }
-              )
-
-              channel.ack(message)
-              return resolve(result)
-            })
-            .catch(err => {
-              channel.ack(message)
-              return reject(err)
-            })
-        })
-    )
+    channel.consume(name, taskRunner(channel, task))
   }
 
   /**

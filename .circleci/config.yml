@@ -7,7 +7,7 @@ version: 2
 jobs:
   build:
     docker:
-      - image: circleci/node:lts
+      - image: circleci/node:latest
         environment:
         - NODE_ENV: test
 
@@ -50,6 +50,10 @@ jobs:
       - run:
           name: Integration Tests
           command: npm run test:integration
+
+      - run:
+          name: Mutation Tests
+          command: npm run test:mutants
 
       - run:
           name: Push any lockfile changes
