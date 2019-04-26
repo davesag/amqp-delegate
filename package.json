@@ -18,10 +18,9 @@
     "start": "node index.js",
     "backend": "docker-compose up -d amqp",
     "test": "npm run test:unit",
-    "test:integration": "NODE_ENV=test mocha --require ./test/integration/testHelper.js --spec ./test/integration/**/*.test.js --bail",
-    "test:unit": "NODE_ENV=test mocha --require ./test/unit/testHelper.js --spec ./test/unit/**/*.test.js",
-    "test:unit:cov-x": "NODE_ENV=test nyc mocha --require ./test/unit/testHelper.js --spec ./test/unit/**/*.test.js",
-    "test:unit:cov": "find ./test/unit -name '*.test.js' | NODE_ENV=test xargs nyc mocha --require ./test/unit/testHelper.js",
+    "test:integration": "NODE_ENV=test mocha ./test/integration/ --require ./test/integration/testHelper.js --extension .test.js --recursive --bail",
+    "test:unit": "NODE_ENV=test mocha ./test/unit/ --require ./test/unit/testHelper.js --recursive --extension .test.js",
+    "test:unit:cov": "NODE_ENV=test nyc mocha ./test/unit/ --require ./test/unit/testHelper.js --recursive --extension .test.js",
     "test:mutants": "NODE_ENV=test npx stryker run"
   },
   "keywords": [
@@ -32,15 +31,15 @@
   ],
   "author": "Dave Sag <davesag@gmail.com>",
   "license": "MIT",
-  "dependencies": {
-    "amqplib": "^0.5.3",
-    "uuid": "^3.3.2"
-  },
   "repository": "https://github.com/davesag/amqp-delegate.git",
   "bugs": {
     "url": "https://github.com/davesag/amqp-delegate/issues"
   },
   "homepage": "https://github.com/davesag/amqp-delegate#README",
+  "dependencies": {
+    "amqplib": "^0.5.3",
+    "uuid": "^3.3.2"
+  },
   "devDependencies": {
     "@stryker-mutator/core": "^1.3.0",
     "@stryker-mutator/javascript-mutator": "^1.3.0",
