@@ -1,5 +1,6 @@
 module.exports = function(config) {
   config.set({
+    maxConcurrentTestRunners: 8,
     mutate: [
       'src/**/*.js',
       '!src/defaults.js',
