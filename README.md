@@ -1,30 +1,22 @@
 # amqp-delegate
 
-A very simple, performant, remote worker system that uses `AMQP` to coordinate jobs.
-
-[![Greenkeeper badge](https://badges.greenkeeper.io/davesag/amqp-delegate.svg)](https://greenkeeper.io/)
-
-<!-- prettier-ignore -->
-| branch | status | coverage | notes |
-| ------ | ------ | -------- | ----- |
-| `develop` | [![CircleCI](https://circleci.com/gh/davesag/amqp-delegate/tree/develop.svg?style=svg)](https://circleci.com/gh/davesag/amqp-delegate/tree/develop) | [![codecov](https://codecov.io/gh/davesag/amqp-delegate/branch/develop/graph/badge.svg)](https://codecov.io/gh/davesag/amqp-delegate) | Work in progress |
-| `master` | [![CircleCI](https://circleci.com/gh/davesag/amqp-delegate/tree/master.svg?style=svg)](https://circleci.com/gh/davesag/amqp-delegate/tree/master) | [![codecov](https://codecov.io/gh/davesag/amqp-delegate/branch/master/graph/badge.svg)](https://codecov.io/gh/davesag/amqp-delegate) | Latest stable release |
+A remote worker system that uses `AMQP` to coordinate jobs.
 
 [![NPM](https://nodei.co/npm/amqp-delegate.png)](https://nodei.co/npm/amqp-delegate/)
 
 ## See Also
 
-- [`amqp-simple-pub-sub`](https://github.com/davesag/amqp-simple-pub-sub) — A library that simplifies use of aqmp based publishers and subscribers.
+- [`amqp-simple-pub-sub`](https://github.com/davesag/amqp-simple-pub-sub) — A library that simplifies use of `AMQP` based publishers and subscribers.
 
 ## Usage
 
-```
+```sh
 npm install amqp-delegate
 ```
 
 ## Worker
 
-```
+```js
 const { makeWorker } = require('amqp-delegate')
 
 const worker = makeWorker({
@@ -52,7 +44,7 @@ worker.stop().then(() => {
 
 ## Delegator
 
-```
+```js
 const { makeDelegator } = require('amqp-delegate')
 
 const delegator = makeWorker({
@@ -80,7 +72,7 @@ delegator
 
 ### The worker
 
-```
+```js
 const { makeWorker } = require('amqp-delegate')
 
 const task = (a, b) =>
@@ -95,11 +87,9 @@ worker
   .start()
   .then(() => {
     process.on('SIGINT', () => {
-      worker
-        .stop()
-        .then(() => {
-          process.exit(0)
-        })
+      worker.stop().then(() => {
+        process.exit(0)
+      })
     })
   })
   .catch(err => {
@@ -109,7 +99,7 @@ worker
 
 ### The delegator
 
-```
+```js
 const { makeDelegator } = require('amqp-delegate')
 
 const delegator = makeDelegator()
@@ -127,20 +117,28 @@ delegator
 
 ## Development
 
+[![Greenkeeper badge](https://badges.greenkeeper.io/davesag/amqp-delegate.svg)](https://greenkeeper.io/)
+
+<!-- prettier-ignore -->
+| branch | status | coverage | notes |
+| ------ | ------ | -------- | ----- |
+| `develop` | [![CircleCI](https://circleci.com/gh/davesag/amqp-delegate/tree/develop.svg?style=svg)](https://circleci.com/gh/davesag/amqp-delegate/tree/develop) | [![codecov](https://codecov.io/gh/davesag/amqp-delegate/branch/develop/graph/badge.svg)](https://codecov.io/gh/davesag/amqp-delegate) | Work in progress |
+| `master` | [![CircleCI](https://circleci.com/gh/davesag/amqp-delegate/tree/master.svg?style=svg)](https://circleci.com/gh/davesag/amqp-delegate/tree/master) | [![codecov](https://codecov.io/gh/davesag/amqp-delegate/branch/master/graph/badge.svg)](https://codecov.io/gh/davesag/amqp-delegate) | Latest stable release |
+
 ### Prerequisites
 
-- [NodeJS](htps://nodejs.org), version 10.15.3 or better (I use [`nvm`](https://github.com/creationix/nvm) to manage Node versions — `brew install nvm`.)
+- [NodeJS](htps://nodejs.org), version 8.10.0 or better (I use [`nvm`](https://github.com/creationix/nvm) to manage Node versions — `brew install nvm`.)
 - [Docker](https://www.docker.com) (Use [Docker for Mac](https://docs.docker.com/docker-for-mac/), not the homebrew version)
 
 ### Initialisation
 
-```
+```sh
 npm install
 ```
 
 ### To Start the queue server for integration testing.
 
-```
+```sh
 docker-compose up -d
 ```
 
@@ -148,13 +146,14 @@ Runs Rabbit MQ.
 
 ### Test it
 
-- `npm test` — runs the unit tests (does not need rabbitmq)
-- `npm run test:unit:cov` — runs the unit tests with code coverage (does not need rabbitmq)
-- `npm run test:integration` — runs the integration tests (needs rabbitmq)
+- `npm test` — runs the unit tests (does not need `rabbitmq`)
+- `npm run test:unit:cov` — runs the unit tests with code coverage (does not need `rabbitmq`)
+- `npm run test:integration` — runs the integration tests (needs `rabbitmq`)
+- `npm run test:mutants` — runs the mutation tests (does not need `rabbitmq`)
 
 ### Lint it
 
-```
+```sh
 npm run lint
 ```
 

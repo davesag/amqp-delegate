@@ -4,11 +4,11 @@ const v4 = require('uuid/v4')
 const {
   QUEUE_NOT_STARTED,
   QUEUE_ALREADY_STARTED,
-  NOT_CONNECTED,
-  WRONG_CORRELATION_ID
+  NOT_CONNECTED
 } = require('./errors')
 const defaults = require('./defaults')
 const attachEvents = require('./attachEvents')
+const invoker = require('./utils/invoker')
 
 /**
  * Create a Job Delegator with the given options.
@@ -47,32 +47,13 @@ const makeDelegator = (options = {}) => {
    *  @param params - The params to pass to the worker
    *  @return a promise that resolves to the result of the worker's task.
    */
-  /* istanbul ignore next */
   const invoke = async (name, ...params) => {
     if (!channel) throw new Error(QUEUE_NOT_STARTED)
     const queue = await channel.assertQueue('', { exclusive: true })
-    const buffer = Buffer.from(JSON.stringify(params))
     const correlationId = v4()
     const replyTo = queue.queue
-
-    return new Promise((resolve, reject) => {
-      channel.consume(
-        replyTo,
-        message => {
-          if (message.properties.correlationId === correlationId) {
-            try {
-              const result = JSON.parse(message.content.toString())
-              return resolve(result)
-            } catch (err) {
-              return reject(err)
-            }
-          } else return reject(WRONG_CORRELATION_ID)
-        },
-        { noAck: true }
-      )
-
-      channel.sendToQueue(name, buffer, { correlationId, replyTo })
-    })
+    const invocation = invoker(correlationId, channel, replyTo)
+    return invocation(name, params)
   }
 
   /**
