@@ -1,12 +1,12 @@
 # amqp-delegate
 
-A very simple, performant, remote worker system that uses `AMQP` to coordinate jobs.
+A remote worker system that uses `AMQP` to coordinate jobs.
 
 [![NPM](https://nodei.co/npm/amqp-delegate.png)](https://nodei.co/npm/amqp-delegate/)
 
 ## See Also
 
-- [`amqp-simple-pub-sub`](https://github.com/davesag/amqp-simple-pub-sub) — A library that simplifies use of aqmp based publishers and subscribers.
+- [`amqp-simple-pub-sub`](https://github.com/davesag/amqp-simple-pub-sub) — A library that simplifies use of `AMQP` based publishers and subscribers.
 
 ## Usage
 
