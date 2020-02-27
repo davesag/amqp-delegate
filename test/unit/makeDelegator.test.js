@@ -25,7 +25,7 @@ describe('makeDelegator', () => {
 
   const makeDelegator = proxyquire('../../src/makeDelegator', {
     amqplib,
-    'uuid/v4': v4,
+    uuid: { v4 },
     './attachEvents': attachEvents,
     './utils/invoker': invoker
   })
