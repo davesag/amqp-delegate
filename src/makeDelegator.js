@@ -1,5 +1,5 @@
 const amqp = require('amqplib')
-const v4 = require('uuid/v4')
+const { v4 } = require('uuid')
 
 const {
   QUEUE_NOT_STARTED,
