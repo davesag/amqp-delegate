@@ -117,7 +117,7 @@ delegator
 
 ## Development
 
-[![Greenkeeper badge](https://badges.greenkeeper.io/davesag/amqp-delegate.svg)](https://greenkeeper.io/)
+### Branches
 
 <!-- prettier-ignore -->
 | branch | status | coverage | Audit | notes |
