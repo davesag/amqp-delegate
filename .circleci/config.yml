@@ -22,11 +22,7 @@ jobs:
 
       - run:
           name: Install global packages
-          command: sudo npm install -g codecov greenkeeper-lockfile@1
-
-      - run:
-          name: Greenkeeper Lockfile
-          command: greenkeeper-lockfile-update
+          command: sudo npm install -g codecov
 
       - run:
           name: Install dependencies
@@ -48,10 +44,6 @@ jobs:
       - run:
           name: Integration Tests
           command: npm run test:integration
-
-      - run:
-          name: Push any lockfile changes
-          command: greenkeeper-lockfile-upload
 
       - run:
           name: Send reports to codecov.io
