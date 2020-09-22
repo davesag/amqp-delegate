@@ -3,8 +3,7 @@ const makeWorker = require('../../src/makeWorker')
 const makeDelegator = require('../../src/makeDelegator')
 
 describe('delegate an asynchronous task', () => {
-  const task = (a, b) =>
-    new Promise(resolve => setTimeout(() => resolve(a + b), 10))
+  const task = (a, b) => new Promise(resolve => setTimeout(() => resolve(a + b), 10))
 
   const worker = makeWorker({
     name: 'adder',

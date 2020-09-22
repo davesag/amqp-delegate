@@ -1,11 +1,7 @@
 const amqp = require('amqplib')
 const { v4 } = require('uuid')
 
-const {
-  QUEUE_NOT_STARTED,
-  QUEUE_ALREADY_STARTED,
-  NOT_CONNECTED
-} = require('./errors')
+const { QUEUE_NOT_STARTED, QUEUE_ALREADY_STARTED, NOT_CONNECTED } = require('./errors')
 const defaults = require('./defaults')
 const attachEvents = require('./attachEvents')
 const invoker = require('./utils/invoker')

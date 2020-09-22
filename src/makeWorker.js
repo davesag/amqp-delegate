@@ -1,10 +1,5 @@
 const amqp = require('amqplib')
-const {
-  NAME_MISSING,
-  NOT_CONNECTED,
-  QUEUE_ALREADY_STARTED,
-  TASK_MISSING
-} = require('./errors')
+const { NAME_MISSING, NOT_CONNECTED, QUEUE_ALREADY_STARTED, TASK_MISSING } = require('./errors')
 const defaults = require('./defaults')
 const attachEvents = require('./attachEvents')
 const taskRunner = require('./utils/taskRunner')

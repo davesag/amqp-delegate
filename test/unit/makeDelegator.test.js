@@ -2,18 +2,9 @@ const { expect } = require('chai')
 const { stub, match, resetHistory } = require('sinon')
 const proxyquire = require('proxyquire')
 
-const {
-  fakeQueue,
-  fakeChannel,
-  fakeConnection,
-  mockAmqplib
-} = require('./fakes')
+const { fakeQueue, fakeChannel, fakeConnection, mockAmqplib } = require('./fakes')
 
-const {
-  QUEUE_NOT_STARTED,
-  QUEUE_ALREADY_STARTED,
-  NOT_CONNECTED
-} = require('../../src/errors')
+const { QUEUE_NOT_STARTED, QUEUE_ALREADY_STARTED, NOT_CONNECTED } = require('../../src/errors')
 
 describe('makeDelegator', () => {
   const amqplib = mockAmqplib()
@@ -99,8 +90,7 @@ describe('makeDelegator', () => {
 
       after(resetHistory)
 
-      it('throws NOT_CONNECTED', () =>
-        expect(delegator.stop()).to.be.rejectedWith(NOT_CONNECTED))
+      it('throws NOT_CONNECTED', () => expect(delegator.stop()).to.be.rejectedWith(NOT_CONNECTED))
     })
 
     context('after the delegator was started', () => {
@@ -168,11 +158,7 @@ describe('makeDelegator', () => {
       })
 
       it('called the invoker with the correct params', () => {
-        expect(invoker).to.have.been.calledWith(
-          correlationId,
-          channel,
-          queue.queue
-        )
+        expect(invoker).to.have.been.calledWith(correlationId, channel, queue.queue)
       })
 
       it('called invocation with the correct params', () => {

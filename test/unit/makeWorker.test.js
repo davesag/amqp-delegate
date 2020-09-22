@@ -36,13 +36,11 @@ describe('makeWorker', () => {
     after(resetHistory)
 
     context('with missing name', () => {
-      it('throws NAME_MISSING', () =>
-        expect(() => makeWorker({ task })).to.throw(NAME_MISSING))
+      it('throws NAME_MISSING', () => expect(() => makeWorker({ task })).to.throw(NAME_MISSING))
     })
 
     context('with missing task', () => {
-      it('throws TASK_MISSING', () =>
-        expect(() => makeWorker({ name })).to.throw(TASK_MISSING))
+      it('throws TASK_MISSING', () => expect(() => makeWorker({ name })).to.throw(TASK_MISSING))
     })
 
     context('with valid params', () => {
@@ -124,8 +122,7 @@ describe('makeWorker', () => {
       })
       after(resetHistory)
 
-      it('throws NOT_CONNECTED', () =>
-        expect(worker.stop()).to.be.rejectedWith(NOT_CONNECTED))
+      it('throws NOT_CONNECTED', () => expect(worker.stop()).to.be.rejectedWith(NOT_CONNECTED))
     })
 
     context('after the worker was started', () => {
