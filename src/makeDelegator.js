@@ -8,20 +8,21 @@ const invoker = require('./utils/invoker')
 
 /**
  * Create a Job Delegator with the given options.
- * @param options
+ *
+ * @param {Object} options
  *   - exchange The name of the service exchange (optional. Defaults to '')
- *   - url The url of the AQMP server to use.  (Optional. Defaults to 'amqp://localhost')
- *   - onError a hander to handle connection errors (optional)
+ *   - url The url of the AMQP server to use.  (Optional. Defaults to 'amqp://localhost')
+ *   - onError a handler to handle connection errors (optional)
  *   - onClose a handler to handle connection closed events (optional)
- * @return A Delegator
+ * @return A Delegator function
  */
 const makeDelegator = (options = {}) => {
-  const _options = {
+  const opts = {
     ...defaults,
     ...options
   }
 
-  const { url, onError, onClose } = _options
+  const { url, onError, onClose } = opts
 
   let connection
   let channel

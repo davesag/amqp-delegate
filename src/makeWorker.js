@@ -6,11 +6,12 @@ const taskRunner = require('./utils/taskRunner')
 
 /**
  * Create a Worker with the given options.
+ *
  * @param options
  *   - name The name of the worker. (required)
  *   - task A pure async function that does the work (required)
- *   - url The url of the AQMP server to use.  (optional, defaults to 'amqp://localhost')
- *   - onError a hander to handle connection errors (optional)
+ *   - url The url of the AMQP server to use.  (optional, defaults to 'amqp://localhost')
+ *   - onError a handler to handle connection errors (optional)
  *   - onClose a handler to handle connection closed events (optional)
  * @return A Worker
  */
