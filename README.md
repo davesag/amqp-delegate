@@ -75,8 +75,7 @@ delegator
 ```js
 const { makeWorker } = require('amqp-delegate')
 
-const task = (a, b) =>
-  new Promise(resolve => setTimeout(() => resolve(a + b), 10))
+const task = (a, b) => new Promise(resolve => setTimeout(() => resolve(a + b), 10))
 
 const worker = makeWorker({
   name: 'adder',

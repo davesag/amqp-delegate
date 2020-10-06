@@ -5,8 +5,7 @@ const makeDelegator = require('../../src/makeDelegator')
 
 // TODO: sometimes this gets stuck.  work out why.
 describe('delegate many tasks to multiple workers', () => {
-  const task = (a, b) =>
-    new Promise(resolve => setTimeout(() => resolve(a + b), 10))
+  const task = (a, b) => new Promise(resolve => setTimeout(() => resolve(a + b), 10))
 
   const worker1 = makeWorker({
     name: 'adder',

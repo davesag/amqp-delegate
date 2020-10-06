@@ -27,11 +27,7 @@ describe('utils/invoker', () => {
   after(resetHistory)
 
   it('called the messageCorrelator with the expected values', () => {
-    expect(messageCorrelator).to.have.been.calledWith(
-      correlationId,
-      match.func,
-      match.func
-    )
+    expect(messageCorrelator).to.have.been.calledWith(correlationId, match.func, match.func)
   })
 
   it('called channel.consume with the expected values', () => {
