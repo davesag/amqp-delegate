@@ -50,7 +50,7 @@
   "homepage": "https://github.com/davesag/amqp-delegate#README",
   "dependencies": {
     "amqplib": "^0.6.0",
-    "uuid": "^8.3.0"
+    "uuid": "^8.3.1"
   },
   "devDependencies": {
     "@stryker-mutator/core": "^3.3.1",
