@@ -126,7 +126,7 @@ delegator
 
 ### Prerequisites
 
-- [NodeJS](htps://nodejs.org), version 15.0.1 or better (I use [`nvm`](https://github.com/creationix/nvm) to manage Node versions — `brew install nvm`.)
+- [NodeJS](htps://nodejs.org), stick to version 14.15.0 for now (I use [`nvm`](https://github.com/creationix/nvm) to manage Node versions — `brew install nvm`.) The `package-lock.json` file format changed between v6 and v7 of `npm` and npm 7 causes all manner of dramas. Also `amqplib` requires Node <= 14.
 - [Docker](https://www.docker.com) (Use [Docker for Mac](https://docs.docker.com/docker-for-mac/), not the homebrew version)
 
 ### Initialisation
