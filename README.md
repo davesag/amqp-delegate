@@ -126,7 +126,7 @@ delegator
 
 ### Prerequisites
 
-- [NodeJS](htps://nodejs.org), stick to version 14.15.0 for now (I use [`nvm`](https://github.com/creationix/nvm) to manage Node versions — `brew install nvm`.) The `package-lock.json` file format changed between v6 and v7 of `npm` and npm 7 causes all manner of dramas. Also `amqplib` requires Node <= 14.
+- [NodeJS](htps://nodejs.org), 15.0.1+ (I use [`nvm`](https://github.com/creationix/nvm) to manage Node versions — `brew install nvm`.) You must use npm version 7.0.8 or better.
 - [Docker](https://www.docker.com) (Use [Docker for Mac](https://docs.docker.com/docker-for-mac/), not the homebrew version)
 
 ### Initialisation
@@ -148,7 +148,6 @@ Runs Rabbit MQ.
 - `npm test` — runs the unit tests (does not need `rabbitmq`)
 - `npm run test:unit:cov` — runs the unit tests with code coverage (does not need `rabbitmq`)
 - `npm run test:integration` — runs the integration tests (needs `rabbitmq`)
-- `npm run test:mutants` — runs the mutation tests (does not need `rabbitmq`)
 
 ### Lint it
 
