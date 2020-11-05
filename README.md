@@ -126,7 +126,7 @@ delegator
 
 ### Prerequisites
 
-- [NodeJS](htps://nodejs.org), 15.0.1+ (I use [`nvm`](https://github.com/creationix/nvm) to manage Node versions — `brew install nvm`.) You must use npm version 7.0.8 or better.
+- [NodeJS](htps://nodejs.org), 15.1.0+ (I use [`nvm`](https://github.com/creationix/nvm) to manage Node versions — `brew install nvm`.) You must use npm version 7.0.8 or better.
 - [Docker](https://www.docker.com) (Use [Docker for Mac](https://docs.docker.com/docker-for-mac/), not the homebrew version)
 
 ### Initialisation
