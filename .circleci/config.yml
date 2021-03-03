@@ -18,7 +18,7 @@ jobs:
 
       - restore_cache:
           keys:
-          - dependencies-{{ checksum "package.json" }}
+          - dependencies-v2-{{ checksum "package.json" }}
 
       - run:
           name: Install global packages
@@ -29,7 +29,7 @@ jobs:
           command: npm install
 
       - save_cache:
-          key: dependencies-{{ checksum "package.json" }}
+          key: dependencies-v2-{{ checksum "package.json" }}
           paths:
             - node_modules
 

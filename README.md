@@ -126,7 +126,7 @@ delegator
 
 ### Prerequisites
 
-- [NodeJS](htps://nodejs.org), version 8.10.0 or better (I use [`nvm`](https://github.com/creationix/nvm) to manage Node versions — `brew install nvm`.)
+- [NodeJS](htps://nodejs.org), 8.10.0+ (I use [`nvm`](https://github.com/creationix/nvm) to manage Node versions — `brew install nvm`.)
 - [Docker](https://www.docker.com) (Use [Docker for Mac](https://docs.docker.com/docker-for-mac/), not the homebrew version)
 
 ### Initialisation
@@ -148,7 +148,6 @@ Runs Rabbit MQ.
 - `npm test` — runs the unit tests (does not need `rabbitmq`)
 - `npm run test:unit:cov` — runs the unit tests with code coverage (does not need `rabbitmq`)
 - `npm run test:integration` — runs the integration tests (needs `rabbitmq`)
-- `npm run test:mutants` — runs the mutation tests (does not need `rabbitmq`)
 
 ### Lint it
 

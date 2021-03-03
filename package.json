@@ -1,6 +1,6 @@
 {
   "name": "amqp-delegate",
-  "version": "1.1.2",
+  "version": "1.2.0",
   "description": "A remote worker system that uses AMQP to coordinate jobs.",
   "author": "Dave Sag <davesag@gmail.com>",
   "type": "commonjs",
@@ -31,7 +31,6 @@
     "test:integration": "NODE_ENV=test mocha ./test/integration/ --require ./test/integrationTestHelper.js --recursive --bail",
     "test:unit": "NODE_ENV=test mocha ./test/unit/ --require ./test/unitTestHelper.js --recursive",
     "test:unit:cov": "NODE_ENV=test nyc mocha ./test/unit/ --require ./test/unitTestHelper.js --recursive",
-    "test:mutants": "NODE_ENV=test npx stryker run",
     "snyk-protect": "snyk protect"
   },
   "keywords": [
@@ -49,37 +48,32 @@
   },
   "homepage": "https://github.com/davesag/amqp-delegate#README",
   "dependencies": {
-    "amqplib": "^0.6.0",
+    "amqplib": "^0.7.0",
     "uuid": "^8.3.1"
   },
   "devDependencies": {
-    "@stryker-mutator/core": "^3.3.1",
-    "@stryker-mutator/javascript-mutator": "^3.3.1",
-    "@stryker-mutator/mocha-framework": "^3.3.1",
-    "@stryker-mutator/mocha-runner": "^3.3.1",
-    "ajv": "^6.12.5",
+    "ajv": "^7.0.3",
     "chai": "^4.2.0",
     "chai-as-promised": "^7.1.1",
-    "eslint": "^7.10.0",
-    "eslint-config-prettier": "^6.12.0",
-    "eslint-config-standard": "^14.1.1",
+    "eslint": "^7.11.0",
+    "eslint-config-prettier": "^8.0.0",
+    "eslint-config-standard": "^16.0.1",
     "eslint-plugin-import": "^2.22.1",
     "eslint-plugin-mocha": "^8.0.0",
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-prettier": "^3.1.4",
     "eslint-plugin-promise": "^4.2.1",
-    "eslint-plugin-standard": "^4.0.1",
     "faker": "^5.1.0",
-    "husky": "^4.3.0",
-    "lint-staged": "^10.4.0",
-    "mocha": "^8.1.3",
+    "husky": "^5.0.9",
+    "lint-staged": "^10.4.2",
+    "mocha": "^8.2.0",
     "nyc": "^15.1.0",
     "prettier": "^2.1.2",
     "proxyquire": "^2.1.3",
     "sinon": "^9.2.0",
     "sinon-chai": "^3.5.0",
-    "snyk": "^1.410.2",
-    "supertest": "^5.0.0",
+    "snyk": "^1.419.1",
+    "supertest": "^6.0.0",
     "wait-until": "0.0.2"
   },
   "prettier": {
@@ -94,11 +88,6 @@
     "**/*.{js,json,md}": [
       "prettier --write"
     ]
-  },
-  "husky": {
-    "hooks": {
-      "pre-commit": "lint-staged"
-    }
   },
   "nyc": {
     "check-coverage": true,
