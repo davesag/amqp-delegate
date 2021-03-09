@@ -1,6 +1,6 @@
 {
   "name": "amqp-delegate",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "description": "A remote worker system that uses AMQP to coordinate jobs.",
   "author": "Dave Sag <davesag@gmail.com>",
   "type": "commonjs",
@@ -48,7 +48,7 @@
   },
   "homepage": "https://github.com/davesag/amqp-delegate#README",
   "dependencies": {
-    "amqplib": "^0.7.0",
+    "amqplib": "^0.7.1",
     "uuid": "^8.3.1"
   },
   "devDependencies": {
