@@ -122,7 +122,7 @@ delegator
 | branch | status | coverage | Audit | notes |
 | ------ | ------ | -------- | ----- | ----- |
 | `develop` | [![CircleCI](https://circleci.com/gh/davesag/amqp-delegate/tree/develop.svg?style=svg)](https://circleci.com/gh/davesag/amqp-delegate/tree/develop) | [![codecov](https://codecov.io/gh/davesag/amqp-delegate/branch/develop/graph/badge.svg)](https://codecov.io/gh/davesag/amqp-delegate) | [![Vulnerabilities](https://snyk.io/test/github/davesag/amqp-delegate/develop/badge.svg)](https://snyk.io/test/github/davesag/amqp-delegate/develop) | Work in progress |
-| `master` | [![CircleCI](https://circleci.com/gh/davesag/amqp-delegate/tree/master.svg?style=svg)](https://circleci.com/gh/davesag/amqp-delegate/tree/master) | [![codecov](https://codecov.io/gh/davesag/amqp-delegate/branch/master/graph/badge.svg)](https://codecov.io/gh/davesag/amqp-delegate) | [![Vulnerabilities](https://snyk.io/test/github/davesag/amqp-delegate/master/badge.svg)](https://snyk.io/test/github/davesag/amqp-delegate/master) | Latest stable release |
+| `main` | [![CircleCI](https://circleci.com/gh/davesag/amqp-delegate/tree/main.svg?style=svg)](https://circleci.com/gh/davesag/amqp-delegate/tree/main) | [![codecov](https://codecov.io/gh/davesag/amqp-delegate/branch/main/graph/badge.svg)](https://codecov.io/gh/davesag/amqp-delegate) | [![Vulnerabilities](https://snyk.io/test/github/davesag/amqp-delegate/main/badge.svg)](https://snyk.io/test/github/davesag/amqp-delegate/main) | Latest stable release |
 
 ### Prerequisites
 
@@ -135,7 +135,7 @@ delegator
 npm install
 ```
 
-### To Start the queue server for integration testing.
+### To Start the queue server for integration testing
 
 ```sh
 docker-compose up -d
