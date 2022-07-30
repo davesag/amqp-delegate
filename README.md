@@ -135,7 +135,7 @@ delegator
 npm install
 ```
 
-### To Start the queue server for integration testing.
+### To Start the queue server for integration testing
 
 ```sh
 docker-compose up -d
