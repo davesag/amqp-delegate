@@ -53,7 +53,16 @@ describe('utils/taskRunner', () => {
     const content = Buffer.from('some nonsense')
 
     const message = { properties: { correlationId, replyTo }, content }
+    let error
 
-    it('throws an error', () => expect(runner(message)).to.be.rejected)
+    before(async () => {
+      try {
+        await runner(message)
+      } catch (err) {
+        error = err
+      }
+    })
+
+    it('threw an error', () => expect(error).not.to.be.undefined)
   })
 })

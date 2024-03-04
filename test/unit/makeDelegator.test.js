@@ -78,19 +78,39 @@ describe('makeDelegator', () => {
       expect(connection.createChannel).to.have.been.calledOnce
     })
 
-    it('throws QUEUE_ALREADY_STARTED if you try and start it again', () =>
-      expect(delegator.start()).to.be.rejectedWith(QUEUE_ALREADY_STARTED))
+    context('if you try and start it again', () => {
+      let error
+
+      before(async () => {
+        try {
+          await delegator.start()
+        } catch (err) {
+          error = err
+        }
+      })
+
+      it('throws QUEUE_ALREADY_STARTED ', () => {
+        expect(error.message).to.equal(QUEUE_ALREADY_STARTED)
+      })
+    })
   })
 
   describe('stop', () => {
     context('before the delegator was started', () => {
-      before(() => {
+      let error
+
+      before(async () => {
         delegator = makeDelegator({ exchange })
+        try {
+          await delegator.stop()
+        } catch (err) {
+          error = err
+        }
       })
 
       after(resetHistory)
 
-      it('throws NOT_CONNECTED', () => expect(delegator.stop()).to.be.rejectedWith(NOT_CONNECTED))
+      it('throws NOT_CONNECTED', () => expect(error.message).to.equal(NOT_CONNECTED))
     })
 
     context('after the delegator was started', () => {
@@ -121,14 +141,22 @@ describe('makeDelegator', () => {
     const invocation = stub()
 
     context('before the delegator was started', () => {
-      before(() => {
+      let error
+
+      before(async () => {
         delegator = makeDelegator({ exchange })
+        try {
+          await delegator.invoke()
+        } catch (err) {
+          error = err
+        }
       })
 
       after(resetHistory)
 
-      it('throws QUEUE_NOT_STARTED', () =>
-        expect(delegator.invoke()).to.be.rejectedWith(QUEUE_NOT_STARTED))
+      it('throws QUEUE_NOT_STARTED', () => {
+        expect(error.message).to.equal(QUEUE_NOT_STARTED)
+      })
     })
 
     context('after the delegator was started', () => {

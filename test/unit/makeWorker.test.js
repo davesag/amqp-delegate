@@ -99,9 +99,6 @@ describe('makeWorker', () => {
       })
     })
 
-    it('throws QUEUE_ALREADY_STARTED if you try and start it again', () =>
-      expect(worker.start()).to.be.rejectedWith(QUEUE_ALREADY_STARTED))
-
     it('called channel.prefetch with value 1', () => {
       expect(channel.prefetch).to.have.been.calledWith(1)
     })
@@ -113,16 +110,42 @@ describe('makeWorker', () => {
     it('called channel.consume with the correct values', () => {
       expect(channel.consume).to.have.been.calledWith(name, runner)
     })
+
+    context('if you try and start it again', () => {
+      let error
+
+      before(async () => {
+        try {
+          await worker.start()
+        } catch (err) {
+          error = err
+        }
+      })
+
+      it('throws QUEUE_ALREADY_STARTED ', () => {
+        expect(error.message).to.equal(QUEUE_ALREADY_STARTED)
+      })
+    })
   })
 
   describe('stop', () => {
     context('before the worker was started', () => {
-      before(() => {
+      let error
+
+      before(async () => {
         worker = makeWorker({ name, task })
+        try {
+          await worker.stop()
+        } catch (err) {
+          error = err
+        }
       })
+
       after(resetHistory)
 
-      it('throws NOT_CONNECTED', () => expect(worker.stop()).to.be.rejectedWith(NOT_CONNECTED))
+      it('throws NOT_CONNECTED', () => {
+        expect(error.message).to.equal(NOT_CONNECTED)
+      })
     })
 
     context('after the worker was started', () => {
