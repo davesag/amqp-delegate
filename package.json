@@ -48,7 +48,7 @@
   },
   "homepage": "https://github.com/davesag/amqp-delegate#README",
   "dependencies": {
-    "amqplib": "^0.10.4",
+    "amqplib": "^0.10.5",
     "uuid": "^9.0.1"
   },
   "devDependencies": {
